@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRSC Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CRSC Calculator</h1>
+    <label for="retiredPay">Gross Monthly Retired Pay ($):</label>
+    <input type="number" id="retiredPay" />
+
+    <label for="vaComp">Monthly VA Compensation ($):</label>
+    <input type="number" id="vaComp" />
+
+    <label for="disabilityPercent">Combat-Related Disability % (10 - 100):</label>
+    <input type="number" id="disabilityPercent" min="10" max="100" step="10" />
+
+    <label for="yearsOfService">Years of Service:</label>
+    <input type="number" id="yearsOfService" />
+
+    <button onclick="calculateCRSC()">Calculate CRSC</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculateCRSC() {
+      const retiredPay = parseFloat(document.getElementById("retiredPay").value) || 0;
+      const vaComp = parseFloat(document.getElementById("vaComp").value) || 0;
+      const disabilityPercent = parseInt(document.getElementById("disabilityPercent").value) || 0;
+      const yearsOfService = parseInt(document.getElementById("yearsOfService").value) || 0;
+
+      if (!retiredPay || !vaComp || !disabilityPercent || !yearsOfService) {
+        document.getElementById("result").innerText = "Please fill out all fields correctly.";
+        return;
+      }
+
+      const basePay = retiredPay;
+      const disabilityRetiredPay = basePay * (disabilityPercent / 100);
+      const multiplier = Math.min(yearsOfService * 0.025, 0.75);
+      const longevityRetiredPay = basePay * multiplier;
+      const crscEstimate = Math.min(disabilityRetiredPay, longevityRetiredPay, vaComp);
+
+      document.getElementById("result").innerText =
+        `Estimated Monthly CRSC Payment: $${crscEstimate.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
